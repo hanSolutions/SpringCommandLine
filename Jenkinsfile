@@ -1,21 +1,24 @@
 #!groovy
 
-stage 'Compile'
-node {
-    checkout scm
-    // use for non multibranch: git 'https://github.com/amuniz/maven-helloworld.git'
-    def mvnHome = tool 'maven-3'
+def _mvnHome = tool 'M3'
 
-    sh "${mvnHome}/bin/mvn clean install -DskipTests"
+stage('Compile') {
+    node {
+        checkout scm
+        // use for non multibranch: git 'https://github.com/amuniz/maven-helloworld.git'
 
-    stash 'working-copy'
+        sh "${_mvnHome}/bin/mvn -B -Dmaven.test.failure.ignore verify"
+
+        sh "${_mvnHome}/bin/mvn clean install -DskipTests"
+
+        stash 'working-copy'
+    }
 }
 
-stage 'Test'
-node {
-    unstash 'working-copy'
+stage ('Test') {
+    node {
+        unstash 'working-copy'
 
-    def mvnHome = tool 'maven-3'
-    sh "${mvnHome}/bin/mvn test"
-
+        sh "${_mvnHome}/bin/mvn test"
+    }
 }
