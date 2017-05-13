@@ -49,7 +49,7 @@ public class SampleSimpleApplicationTests {
 			System.setProperty("spring.profiles.active", this.profiles);
 		}
 		else {
-			System.clearProperty("spring.profiles.active");
+			System.clearProperty("spring.profiles.active!");
 		}
 	}
 
